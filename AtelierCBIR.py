@@ -65,7 +65,7 @@
 # L’objectif du premier code  est de lire toutes les images de la base et d’afficher les 6 premières
 # 
 
-# In[3]:
+# In[7]:
 
 
 from os import listdir
@@ -93,7 +93,7 @@ for filename in listdir(path):
     print(' %s %s ' % (filename, img_data.shape))
 
 
-# In[4]:
+# In[8]:
 
 
 # Afficher les 6 premières images
@@ -102,23 +102,23 @@ fig = plt.figure(figsize=(6, 6), dpi=200)
 import random
 id=random.sample(range(len(loaded_images)), 6)
 for i in range(6):
-  ax1 = fig.add_subplot(3, 3, i+1)
-  ax1.imshow(loaded_images[id[i]])
-  ax1.set_title('image id: %s '% (id[i]))
+    ax1 = fig.add_subplot(3, 3, i+1)
+    ax1.imshow(loaded_images[id[i]])
+    ax1.set_title('image id: %s '% (id[i]))
 
 
 # <h2>3.2	Recherche par image entière</h2>
 # Pour une première implémentation d’un système CBIR, l’objectif est d’afficher les 5 images les plus similaires à l’image requête « Imrequest.jpg » en se basant sur un calcul de différence entre images entières.<br>
 # L'image requete est dans un dossier "img_requetes" dans Drive
 
-# In[6]:
+# In[9]:
 
 
 img_requete = image.imread('DataSet\imageRequest.jpg')
 plt.imshow(img_requete) 
 
 
-# In[7]:
+# In[10]:
 
 
 import numpy as np
@@ -134,20 +134,20 @@ np.shape(img_requete)
 # 
 # les images de la base. Les distances seront enregistrées dans un dictionnaire et seront par la suite triées par ordre croissant. 
 
-# In[8]:
+# In[11]:
 
 
 # Il faut convertir les matrices 3D en un vecteur 1D en utilisant la méthode flatten()
 x=img_requete.flatten() 
 
 
-# In[9]:
+# In[12]:
 
 
 x
 
 
-# In[10]:
+# In[13]:
 
 
 # Comparer les pixels des deux images utilisant une distance enculidienne
@@ -174,7 +174,7 @@ print(distancesTrie)
 
 # Nous allons afficher l'image requéte ainsi que les 5 images les plus similaires en terme de distance enclidienne
 
-# In[11]:
+# In[14]:
 
 
 fig = plt.figure(figsize=(6, 6), dpi=200)
@@ -205,7 +205,7 @@ for i in range(5):
 # Le vecteur descripteur est créé par la fonction « getFeatures » qui a comme arguments d’entrée l’image et la taille du vecteur. C’est cette fonction qu’on va modifier pour ajouter d’autres descripteurs par la suite. Cette fonction appelle la fonction « color_Moments » qui va retourner le les 6 moments de couleurs.
 # 
 
-# In[12]:
+# In[15]:
 
 
 # la CBIR est constituée de 2 étapes; Indexation et Recherche
@@ -225,31 +225,31 @@ def color_Moments(img):
     return colorFeatures
 
 
-# In[13]:
+# In[82]:
 
 
 
 # l'indexation consiste à créer une matrice d'index utilisant les moments de couleurs pour chacune des images de la base
 # La méthode CBIR_Indexation retourne la matrice de caractéristiques
-def CBIR_Indexation():
+def CBIR_Indexation(loaded_images):
     features =[]
     for i in range(len(loaded_images)):
         features.append(color_Moments(loaded_images[i]))
         #print(np.shape(color_Moments(loaded_images[i])))
     
     return features
-print(np.shape(CBIR_Indexation()))
-print(CBIR_Indexation())
+print(np.shape(CBIR_Indexation(loaded_images)))
+print(CBIR_Indexation(loaded_images))
 #print(len(loaded_images))
 
 
-# In[14]:
+# In[19]:
 
 
-print(np.shape(CBIR_Indexation())[0])
+print(np.shape(CBIR_Indexation(loaded_images))[0])
 
 
-# In[15]:
+# In[20]:
 
 
 
@@ -277,10 +277,10 @@ def CBIR_Recherche(Imreq,ind_Matrix):
 # L’idéal est, qu’au lieu de chercher sur la totalité des images, d’utiliser avec des caractéristiques (descripteurs) de chaque image. 3 types de caractéristiques sont les plus utilisées dans un système CBIR : la Couleur, la Forme et la Texture. <br>
 # Par la suite, nous allons présenter et utiliser chacune des 3 caractéristiques pour créer un système CBIR performant et puissant.
 
-# In[16]:
+# In[22]:
 
 
-index_Matrix=CBIR_Indexation()
+index_Matrix=CBIR_Indexation(loaded_images)
 #index_Matrix[0]
 distanes_CBIR=CBIR_Recherche(img_requete,index_Matrix)
 print(distanes_CBIR)
@@ -291,7 +291,7 @@ print(distanes_CBIR)
 
 # Nous allons afficher l'image requéte ainsi que les 5 images les plus similaires en terme de distance enclidienne
 
-# In[17]:
+# In[23]:
 
 
 fig = plt.figure(figsize=(6, 6), dpi=200)
@@ -299,16 +299,16 @@ ax1 = fig.add_subplot(2, 3, 1)
 ax1.imshow(img_requete)
 ax1.set_title('Image Requete')
 for i in range(5):
-  ax1 = fig.add_subplot(2, 3, i+2)
-  ax1.imshow(loaded_images[distanes_CBIR[i][0]])
-  ax1.set_title('Similaire N° %s' %(i+1))
+    ax1 = fig.add_subplot(2, 3, i+2)
+    ax1.imshow(loaded_images[distanes_CBIR[i][0]])
+    ax1.set_title('Similaire N° %s' %(i+1))
 
 
-# In[18]:
+# In[24]:
 
 
 # Nous allons modifier l'image requéte pour voir le comportement de notre système
-img_requete = image.imread('C:/Users/HP/Downloads/Compressed/DataSet/imageRequest_2.jpg')
+img_requete = image.imread('DataSet/imageRequest_2.jpg')
 #plt.imshow(img_requete) 
 distanes_CBIR=CBIR_Recherche(img_requete,index_Matrix)
 fig = plt.figure(figsize=(6, 6), dpi=200)
@@ -316,9 +316,9 @@ ax1 = fig.add_subplot(2, 3, 1)
 ax1.imshow(img_requete)
 ax1.set_title('Image Requete')
 for i in range(5):
-  ax1 = fig.add_subplot(2, 3, i+2)
-  ax1.imshow(loaded_images[distanes_CBIR[i][0]])
-  ax1.set_title('Similaire N° %s' %(i+1))
+    ax1 = fig.add_subplot(2, 3, i+2)
+    ax1.imshow(loaded_images[distanes_CBIR[i][0]])
+    ax1.set_title('Similaire N° %s' %(i+1))
 
 
 # L’utilisation des moments statistiques semblent donner de bons résultats que la recherche par image entière. Reste à tester la robustesse vis-à-vis des transformations comme la rotation, la translation et le changement d’échelle. 
@@ -332,7 +332,7 @@ for i in range(5):
 
 # ## IMAGE DE BASE 
 
-# In[19]:
+# In[25]:
 
 
 import random
@@ -346,7 +346,7 @@ for i in range(8):
 
 # ## Afficher un image de base avec histogamme 
 
-# In[20]:
+# In[26]:
 
 
 #Traille sur l'image id = 83
@@ -382,7 +382,7 @@ plt.show()
 
 # ## Converter les images de base a RGB vers HSV Et Afficher un image de base et calcule histo
 
-# In[21]:
+# In[27]:
 
 
 fig = plt.figure(figsize=(6, 6), dpi=200)
@@ -419,7 +419,7 @@ plt.show()
 
 # ### featurs d'un seul image 
 
-# In[22]:
+# In[28]:
 
 
 #hist_hsv=cv2.calcHist(img,[0,1,2],None,[8,2,2],[0,360,0,255,0,255]) # histogramme return un tableaux de dim 1x32 vecteur de featuars
@@ -429,7 +429,7 @@ plt.show()
 
 # ## On converter tous les images de Base a HSV et Extraire les features
 
-# In[23]:
+# In[29]:
 
 
 def getHsvHistogramFeatures(img):
@@ -446,7 +446,7 @@ def getHsvHistogramFeatures(img):
 
 # ## -- Afficher les images  5 images les plus similaires , On  utilisent just les vecteurs caractéristiques par forme 
 
-# In[24]:
+# In[30]:
 
 
 def indexHsvHistogramFeatures():#iNDEXATION TOUS LES IMAGES DE BASE
@@ -458,7 +458,7 @@ def indexHsvHistogramFeatures():#iNDEXATION TOUS LES IMAGES DE BASE
     return featuresHistogram
 
 
-# In[25]:
+# In[31]:
 
 
 #extraire les features de images de base index 
@@ -466,7 +466,7 @@ def indexHsvHistogramFeatures():#iNDEXATION TOUS LES IMAGES DE BASE
 indexHsvHistogramFeatures=indexHsvHistogramFeatures()
 
 
-# In[26]:
+# In[32]:
 
 
 def RechercheImageRequete(img_requete ,indexHsvHistogramFeatures  ):
@@ -485,7 +485,7 @@ def RechercheImageRequete(img_requete ,indexHsvHistogramFeatures  ):
     return s
 
 
-# In[27]:
+# In[33]:
 
 
 fig =plt.figure(figsize=(6,6),dpi=200)
@@ -504,7 +504,7 @@ for i in range(5):
 
 # ## Apres extraction des features d'histogramme ,On va Concaténer les deux vecteurs descripteurs de moments et d’histogramme ,  créer une base d’index à base des caractéristiques des images de la base
 
-# In[28]:
+# In[34]:
 
 
 def indexation_base():
@@ -521,13 +521,13 @@ def indexation_base():
 
 #  ## dim de vecteur des caractéristiques  270: images et 38 : caractéristiques = (6 moments + 32 caractéristiques d'istogramme )
 
-# In[29]:
+# In[35]:
 
 
 np.shape(indexation_base())
 
 
-# In[30]:
+# In[36]:
 
 
 indexation_base=indexation_base() # Indexation hors ligne
@@ -535,7 +535,7 @@ indexation_base=indexation_base() # Indexation hors ligne
 
 # ## Maintenant j'ai commencé à chercher sur l'image requete par la fonction Rechercher
 
-# In[31]:
+# In[37]:
 
 
 def rechercher_imgRequete(img_requete , index_features):
@@ -555,7 +555,7 @@ def rechercher_imgRequete(img_requete , index_features):
 
 # ## Nous allons afficher l'image requéte ainsi que les 5 images les plus similaires en terme de distance enclidienne
 
-# In[32]:
+# In[38]:
 
 
 fig =plt.figure(figsize=(6,6),dpi=200)
@@ -570,7 +570,7 @@ for i in range(5):
     ax1.set_title('Similaire N° %s' %(i+1))
 
 
-# In[33]:
+# In[39]:
 
 
 # Python3 program change RGB Color
@@ -624,7 +624,7 @@ x=rgb_to_hsv(256, 0,10)
 x"""
 
 
-# In[34]:
+# In[40]:
 
 
 """def getRGB(img):
@@ -636,43 +636,43 @@ r,g,b=getRGB(loaded_images[83])
 np.shape(r)[0] """
 
 
-# In[35]:
+# In[41]:
 
 
 #print(r.shape)
 
 
-# In[36]:
+# In[42]:
 
 
 #np.shape(s)
 
 
-# In[37]:
+# In[43]:
 
 
 #r
 
 
-# In[38]:
+# In[44]:
 
 
 #loaded_images[83][:,:,0]
 
 
-# In[39]:
+# In[45]:
 
 
 #loaded_images[83][:,:,2]
 
 
-# In[40]:
+# In[46]:
 
 
 #loaded_images[83]
 
 
-# In[41]:
+# In[47]:
 
 
 #import cv2 
@@ -698,26 +698,26 @@ np.shape(r)[0] """
 #     </code>
 #     
 
-# In[42]:
+# In[48]:
 
 
 #import cv2
 img_gray = cv2.cvtColor(img_requete, cv2.COLOR_BGR2GRAY)
 
 
-# In[43]:
+# In[49]:
 
 
 _,img=cv2.threshold(img_gray, 130, 255, cv2.THRESH_BINARY ) #+cv2.THRESH_OTSU
 
 
-# In[44]:
+# In[50]:
 
 
 plt.imshow(img, cmap="gray") 
 
 
-# In[45]:
+# In[51]:
 
 
 def extractionMoments(img_originale):
@@ -732,7 +732,7 @@ def extractionMoments(img_originale):
 # <h3>Notez que hu[0] n’est pas comparable en magnitude à hu[6]. 
 # Nous pouvons utiliser une transformation logarithmique donnée ci-dessous pour les amener dans la même plage</h3>
 
-# In[46]:
+# In[52]:
 
 
 # Log scale hu moments 
@@ -745,7 +745,7 @@ def increaseValueMoments(moments):
     return moments
 
 
-# In[47]:
+# In[53]:
 
 
 def getFeaturesShape(img):
@@ -759,13 +759,13 @@ def getFeaturesShape(img):
     return moments
 
 
-# In[48]:
+# In[54]:
 
 
 #np.shape(getFeaturesShape())[0]
 
 
-# In[49]:
+# In[55]:
 
 
 def indexFeaturesShape():#iNDEXATION TOUS LES IMAGES DE BASE
@@ -777,19 +777,19 @@ def indexFeaturesShape():#iNDEXATION TOUS LES IMAGES DE BASE
     return featuresMoments
 
 
-# In[50]:
+# In[56]:
 
 
 indexFeaturesMoments=indexFeaturesShape()#iNDEXATION TOUS LES IMAGES DE BASE
 
 
-# In[51]:
+# In[57]:
 
 
 np.shape(indexFeaturesMoments)[0]
 
 
-# In[52]:
+# In[58]:
 
 
 
@@ -809,13 +809,13 @@ def RechercheImageRequete(image_Requete ,indexFeaturesMoments  ):
     return s
 
 
-# In[53]:
+# In[59]:
 
 
 #RechercheImageRequete(img_requete ,e  )
 
 
-# In[54]:
+# In[60]:
 
 
 fig =plt.figure(figsize=(6,6),dpi=200)
@@ -834,7 +834,7 @@ for i in range(5):
 # On va Concaténer les deux vecteurs descripteurs un vecteurs qui contient les caractéristiques de moments et d’histogramme , et la vecteurs de la forme . finalement 
 # créer une base d’index à base des caractéristiques des images de la base : Dim vect =1x(6+32+7)=1x45 </h3>
 
-# In[55]:
+# In[61]:
 
 
 def indexation_base():
@@ -849,13 +849,13 @@ def indexation_base():
     return features
 
 
-# In[56]:
+# In[62]:
 
 
 indexation_baseFeatures=indexation_base() # Indexation hors ligne (apres la Concaténation )
 
 
-# In[57]:
+# In[63]:
 
 
 def rechercher_imgRequete(img_requete , index_features):
@@ -874,7 +874,7 @@ def rechercher_imgRequete(img_requete , index_features):
     return s
 
 
-# In[58]:
+# In[64]:
 
 
 fig =plt.figure(figsize=(6,6),dpi=200)
@@ -894,7 +894,7 @@ for i in range(5):
 #     2 - <a href="https://yunusmuhammad007.medium.com/feature-extraction-gray-level-co-occurrence-matrix-glcm-10c45b6d46a1">Lien2  sur L'article Texture </a>
 #     
 
-# In[59]:
+# In[65]:
 
 
 from skimage.feature import greycomatrix, greycoprops
@@ -902,7 +902,7 @@ from skimage import io, color, img_as_ubyte
 import cv2
 
 
-# In[72]:
+# In[66]:
 
 
 #img = img_requete
@@ -976,7 +976,7 @@ print(correlation_feature(matrix_coocurrence))"""
 
 # <h4> la dimension de vecteur descripteur c'est :1x4  </h4>
 
-# In[75]:
+# In[67]:
 
 
 np.shape(getFeaturesTextur(img_requete))
@@ -984,7 +984,7 @@ np.shape(getFeaturesTextur(img_requete))
 
 # <h4>INDEXATION TOUS LES IMAGES DE BASE</h4>
 
-# In[76]:
+# In[85]:
 
 
 def indexTextursFeatures():#iNDEXATION TOUS LES IMAGES DE BASE
@@ -996,19 +996,19 @@ def indexTextursFeatures():#iNDEXATION TOUS LES IMAGES DE BASE
     return featuresTextur
 
 
-# In[77]:
+# In[86]:
 
 
 indexTextursFeatures=indexTextursFeatures()
 
 
-# In[79]:
+# In[87]:
 
 
 np.shape(indexTextursFeatures)
 
 
-# In[80]:
+# In[71]:
 
 
 
@@ -1030,7 +1030,7 @@ def RechercheImageRequete(image_Requete ,indexTextursFeatures  ):
 
 # ##  Recherche par Texture 
 
-# In[81]:
+# In[72]:
 
 
 fig =plt.figure(figsize=(6,6),dpi=200)
@@ -1047,10 +1047,10 @@ for i in range(5):
 
 # ## Finalement On va concaténer le vecteur caracteristique de texture avec le vecteur caracteristique de coleur et la forme 
 
-# In[82]:
+# In[73]:
 
 
-def indexation_base():
+def indexation_base(loaded_images):
     features=[]
     for i in range(len(loaded_images)):
         features.append(np.concatenate((color_Moments(loaded_images[i]),getHsvHistogramFeatures(loaded_images[i]),getFeaturesShape(loaded_images[i])  , getFeaturesTextur(loaded_images[i])) )) #Concaténer les deux vecteurs descripteurs de moments et d’histogramme,form,texture 
@@ -1058,18 +1058,18 @@ def indexation_base():
     return features
 
 
-# In[83]:
+# In[74]:
 
 
-indexation_baseFeatures=indexation_base() # Indexation hors ligne (apres la Concaténation )
+indexation_baseFeatures=indexation_base(loaded_images) # Indexation hors ligne (apres la Concaténation )
 
 
 # ## -------------------------------------------------------------------------------------------------------------------------
 
-# In[84]:
+# In[83]:
 
 
-def rechercher_imgRequete(img_requete , index_features):
+def rechercher_imgRequete(img_requete , index_features ):
     # Extraction des features d'image requete
     feature_imgRequet=np.concatenate((color_Moments(img_requete) , getHsvHistogramFeatures(img_requete) ,getFeaturesShape(img_requete) , getFeaturesTextur(img_requete))) #Concatenation
     
@@ -1084,7 +1084,7 @@ def rechercher_imgRequete(img_requete , index_features):
     return s
 
 
-# In[85]:
+# In[84]:
 
 
 fig =plt.figure(figsize=(6,6),dpi=200)
@@ -1099,40 +1099,20 @@ for i in range(5):
     ax1.set_title('Similaire N° %s' %(i+1))
 
 
-# In[90]:
+# In[79]:
 
 
-np.shape(indexation_base())
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
+np.shape(indexation_base(loaded_images))
 
 # <h1>----------------------------------------------------------------------------------------------------</h1>
 
-# In[62]:
+# In[80]:
 
 
 np.shape(indexation_baseFeatures)
 
 
-# In[63]:
+# In[81]:
 
 
 indexation_baseFeatures
-
