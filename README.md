@@ -1,4 +1,11 @@
 # Content_Based_Image_Retrieval-CBIR
+The objective of this workshop is to introduce the reader to Content Based Image Retrieval (CBIR) systems.
+(CBIR, Content Based Image retrieval). CBIR allows, among other things, to search for images
+similar to a query image in an image database. This similarity is calculated not on the
+images themselves but through a description (descriptor) used by the person who designed the
+the system. The figure below presents a global view of a CBIR system.<br/>
+
+![image](https://user-images.githubusercontent.com/108405071/222992923-d4d0e4df-738a-4f58-909a-b7fb24c3d920.png) <br>
 
 A CBIR system is organized in two parts:<br>
 1-Off-line phase often called indexing where for each image a descriptor vector will be extracted and
