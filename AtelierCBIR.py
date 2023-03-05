@@ -68,6 +68,7 @@
 # In[7]:
 
 
+
 from os import listdir
 from matplotlib import image
 # load all images in a directory
